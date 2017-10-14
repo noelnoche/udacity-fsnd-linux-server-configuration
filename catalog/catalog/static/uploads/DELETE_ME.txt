@@ -1,0 +1,2 @@
+This file serves only as a placeholder so that the Uploads folder can
+be uploaded to GitHub.

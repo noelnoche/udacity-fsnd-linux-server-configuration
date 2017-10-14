@@ -1,0 +1,21 @@
+{% extends "base/main-public.html" %}
+{% block content %}
+
+<div class="header">
+    <h2>{{ CATEGORY.name }}</h2>
+</div> 
+<div class="main">
+    <div class="item-description">
+        <h3>{{ ITEM.name }}</h3>
+        <p>
+        {{ ITEM.description }}
+        </p>
+    </div>
+    <div class="image">
+        {% if ITEM_IMAGE != None %}
+        <img src="{{ url_for('static', filename=ITEM_IMAGE) }}" alt="{{ ITEM_IMAGE }}">
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

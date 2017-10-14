@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="shortcut icon" href="{{url_for('static', filename='assets/favicon.ico')}}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/normalize-v7.0.0.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css')}}">
+        <title>Catalog</title>
+	</head>
+	<body>
+        <nav>
+            <div class="nav-left">
+                <a href="{{url_for('bp_main.welcome') }}"><h1>Catalog</h1></a>
+            </div>
+            <div class="nav-right">
+                <a href="{{ url_for('bp_login.disconnect') }}">LOGOUT | </a>
+                <a href="{{url_for('bp_login.user_settings') }}">Settings</a>
+            </div>
+        </nav>
+		<div class="wrapper">
+			{% block content %}
+			{% endblock %}
+        </div>
+	</body>
+</html>

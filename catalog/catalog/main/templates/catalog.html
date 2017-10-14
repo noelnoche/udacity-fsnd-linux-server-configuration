@@ -1,0 +1,50 @@
+{% extends "base/main.html" %}
+{% block content %}
+
+<div class="header">
+    <h2>CATALOG MAIN PAGE</h2>
+    <a href="{{url_for('bp_main.create_category') }}">Create Category | </a>
+    <a href="{{url_for('bp_main.create_item') }}">Add Item</a>
+    <div class="spacer">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class="flash">
+        {% for message in messages %}
+            <li><strong>{{message}}</strong></li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+    </div>
+</div>
+<div class="catalog-main">
+    <div class="left">
+        <h2>CAT</h2>
+        {% for c in CATEGORIES %}
+            {% if c.name == "Unsorted" %}
+            <a href="{{ url_for('bp_main.show_category', category_name=c.name, user_id=c.user_id) }}">
+                <h3>{{ c.name }}</h3>
+            </a>
+            {% endif %}
+        {% endfor %}
+        {% for c in CATEGORIES %}
+            {% if c.name != "Unsorted" %}
+            <a href="{{ url_for('bp_main.show_category', category_name=c.name, user_id=c.user_id) }}">
+                <h3>{{ c.name }}</h3>
+            </a>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <div class="divider-v"></div>
+    <div class="right">
+        <h2>ITM</h2>
+
+        {% for i in RECENT_ITEMS %}
+        <a href="{{ url_for('bp_main.item_info', category_name=i.category_name, item_name=i.name, user_id=i.user_id)}}">
+            <h3>{{ i.name }}<span class="tag"> &mdash; {{ i.create_date }}</span></h3>
+        </a>
+        {% endfor%}
+    </div>
+</div>
+
+{% endblock %}

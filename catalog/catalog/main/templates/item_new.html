@@ -1,0 +1,45 @@
+{% extends "base/main.html" %}
+{% block content %}
+
+<div class="header">
+    <h2>NEW ITEM</h2>
+    <div class="spacer">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class="flash">
+        {% for message in messages %}
+            <li><strong>{{ message }}</strong></li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
+    </div>
+</div>
+<div class="main">
+    <form class="fm-25-width" id="new-item-form" action="{{ url_for('bp_main.create_item') }}" method="POST" enctype="multipart/form-data">
+        <label>Name<br>
+        <input type="text" size="30" name="fm-name" value="{{ ITEM_NAME }}"></label>
+
+        <label>Description
+            <textarea rows="7" cols="50" name="fm-description">{{ ITEM_DESCRIPTION }}</textarea>
+        </label>
+        
+        <label>Images
+        <input type="file" name="fm-image" accept=".jpg, .jpeg, .png"></label>
+
+        <label>Category
+        <select name="category_name"></label>
+            <option value="Unsorted">Unsorted</option>
+            {% for c in CATEGORIES %}
+                {% if c.name != "Unsorted" %}
+                <option value="{{ c.name }}">{{ c.name }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+
+        <input type=hidden name=csrf-token value="{{ STATE }}">
+        <input type="submit" value="Create"> | <a href="{{ url_for('bp_main.welcome')}}">CANCEL</a>
+    </form>
+</div>
+
+{% endblock %}

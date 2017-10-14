@@ -1,0 +1,27 @@
+{% extends "base/main.html" %}
+{% block content %}
+
+<div class="header">
+    <h2>NEW CATEGORY</h2>
+    <div class="spacer">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class="flash">
+        {% for message in messages %}
+            <li><strong>{{message}}</strong></li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
+    </div>
+</div>
+<div class="main">
+    <form class="fm-25-width" id="new-cat-form" action="{{ url_for('bp_main.create_category') }}" method="POST">
+        <label>Name<br>
+        <input type="text" name="fm-name" size="30"></label>
+        <input type="hidden" name="csrf-token" value="{{ STATE }}">
+        <input type="submit" value="Create"> | <a href="{{ url_for('bp_main.welcome')}}">CANCEL</a>
+    </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base/main.html" %}
+{% block content %}
+
+<div class="header">
+    <h2>EDIT CATEGORY</h2>
+</div>
+<div class="main">
+    <form class="fm-25-width" id="edit-cat-form" action="{{ url_for('bp_main.edit_category', category_name=CATEGORY_NAME, user_id=USER_ID) }}" method="POST">
+        <label>Name<br>
+        <input type="text" name="fm-name" size="30" value="{{ CATEGORY_NAME }}"></label>
+        <input type="hidden" name="csrf-token" value="{{ STATE }}">
+        <input type="submit" value="Update"> | <a href="{{ url_for('bp_main.welcome')}}">CANCEL</a>
+    </form>
+</div>
+
+{% endblock %}

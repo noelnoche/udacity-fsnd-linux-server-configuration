@@ -1,0 +1,90 @@
+{% extends "base/login_main.html" %}
+{% block content %}
+
+<div class="header">
+    <h2>SETTINGS</h2>
+    <ul>
+    {% for key in ERRORS.keys() %}
+        <li>{{ ERRORS[key] }}</li>
+    {% endfor %}
+    </ul>
+    {% if PUBLIC == True %}
+    <strong>Your page is publicly available at 
+        <a href="{{ url_for('bp_main.user_public_page', username=USERNAME, user_id=USERID) }}">
+            {{ url_for('bp_main.user_public_page', username=USERNAME, user_id=USERID) }}
+        </a>
+    </strong>
+    {% else %}
+    <strong>Your page is private.</strong>
+    {% endif %}
+</div>
+
+<div class="main">
+    <h3>{{ MSG }}</h3>
+    <span class="spacer">
+        <div class="msg">
+            <strong>
+                Here you can update your login credentials. You can only use one account 
+                at a time to login. Your choices are Google Plus, Facebook or Twitter.
+            </strong>
+        </div>
+    </span>
+
+    {% if PROVIDER != "catalog" %}
+    <form class="fm-16-width" action="{{ url_for('bp_login.user_settings') }}" method="POST">
+        <label>Email
+        <input type="text" value="{{ EMAIL }}"></label>
+        
+        <label>Confirm
+        <input type="text" name="fm-email-cnf"></label>
+
+        <div class="yn-box">
+            <label>Make your page public?</label>
+            <label class="label-inline">Yes
+            <input type="radio" name="fm-yn" value="Y" checked></label>
+            <label class="label-inline">No
+            <input type="radio" name="fm-yn" value="N"></label>
+        </div>
+        
+        <input type="hidden" name="csrf-token" value="{{ STATE }}">
+        <div class="submit-box">
+            <input type="submit" value="Update">
+        </div>
+    </form>
+</div>
+{% else %}
+<div>
+    <form class="fm-16-width" action="{{ url_for('bp_login.user_settings') }}" method="POST">
+        <label>Username
+        <input type="text" name="fm_username" value="{{ USERNAME }}" maxlength="250"></label>
+
+        <label>Email
+        <input type="text" name="fm_email" value="{{ EMAIL }}" maxlength="250"></label>
+
+        <label>Confirm
+        <input type="text" name="fm_email_cnf" value="{{ EMAIL_CNF }}" maxlength="250"></label>
+
+        <label>Password
+        <input type="password" name="fm_passd" value="{{ PASSD }}" maxlength="32"></label>
+
+        <label>Confirm
+        <input type="password" name="fm_passd_cnf" value="{{ PASSD_CNF }}" maxlength="32"></label>
+
+        <div class="yn-box">
+            <label>Make your page public?</label>
+            <label class="label-inline">Yes
+            <input type="radio" name="fm-yn" value="Y" checked></label>
+            <label class="label-inline">No
+            <input type="radio" name="fm-yn" value="N"></label>
+        </div>
+        
+        <input type="hidden" name="csrf-token" value="{{ STATE }}">
+        <div class="submit-box">
+            <input type="submit" value="Update">
+        </div>
+    </form>
+{% endif %}
+</div>
+
+{% endblock %}
+   

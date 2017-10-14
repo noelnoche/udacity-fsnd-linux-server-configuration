@@ -1,0 +1,25 @@
+{% extends "base/main.html" %}
+{% block content %}
+
+<div class="header">
+    <h2>{{ CATEGORY.name }}</h2>
+    <a href="{{url_for('bp_main.edit_item', category_name=ITEM.category_name, item_name=ITEM.name, user_id=ITEM.user_id) }}">Edit | </a>
+    <a href="{{url_for('bp_main.delete_item', item_name=ITEM.name, user_id=ITEM.user_id) }}">Delete</a>
+</div> 
+<div class="main">
+    <div class="item-description">
+        <article>
+            <h3>{{ ITEM.name }}</h3>
+            <p>
+                {{ ITEM.description }}
+            </p>
+        </article>
+    </div>
+    <div class="image">
+        {% if ITEM_IMAGE != None %}
+        <img src="{{ url_for('static', filename=ITEM_IMAGE) }}" alt="{{ ITEM_IMAGE }}">
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

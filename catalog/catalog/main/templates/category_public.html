@@ -1,0 +1,17 @@
+{% extends "base/main-public.html" %}
+{% block content %}
+
+<div class="header">
+    <h2>{{ CATEGORY.name }}</h2>
+</div>
+<div class="main">
+    {% for i in ITEMS %}
+    <div>
+        <a href="{{ url_for('bp_main.item_info', category_name=CATEGORY.name, item_name=i.name, user_id=i.user_id) }}">
+            <h3>{{ i.name }}</h3>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

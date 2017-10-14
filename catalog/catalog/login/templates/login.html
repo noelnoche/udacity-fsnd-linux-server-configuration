@@ -1,0 +1,251 @@
+{% extends "base/login_main.html" %}
+{% block content %}
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.10";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<div class="header">
+    <h2>LOGIN</h2>
+    <noscript>You need JavaScript enabled to login, sorry.</noscript>
+    <span class="spacer">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class="flash">
+        {% for message in messages %}
+            <li><strong>{{message}}</strong></li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+    </span>
+    <div id="result"></div>
+</div>
+
+<div class="main">
+    <!-- SIGN IN BUTTONS xxx-->
+    <div class="tp-signin-box">
+        <div class="g-signin2" id="gpl-signin" data-width="200" data-height="28" data-longtitle="true"></div>
+        <div class="fb-login-button" data-width="200" data-max-rows="1" data-size="medium" 
+        data-button-type="login_with" data-show-faces="false" data-auto-logout-link="false" 
+        data-use-continue-as="true" scope="public_profile,email" onlogin="sendFbTokenToServer();"></div>
+        <button id="twt-signin"></button>
+    </div>
+
+    <span class="spacer"><em>OR</em></span>
+
+    <form class="fm-16-width" action="{{ url_for('bp_login.login' )}}" method="POST">
+        <div class="signin-box">
+            <label class="signin-label">Email<br>
+            <input type="text" name="fm_email" maxlength="250"></label>
+            <label class="signin-label">Password<br>
+            <input type="password" name="fm_passd" maxlength="250"></label>
+        </div>
+        <input type="hidden" name="csrf-token" value="{{ STATE }}">
+        <input type="submit" value="Login"> | <a href="#" id="sign-up">Sign up</a>
+    </form>
+</div>  
+
+
+<!-- GOOGLE PLUS SIGN IN CODE xxx-->
+<script>
+    $gplButton = $("#gpl-signin");
+    $result = $("#result")
+
+    // Google Plus sign-in callback
+    function gplCallback(json) {
+        authResult = json;
+
+        if (authResult["code"]) {
+
+            // Hide the sign-in button now that the user is authorized
+            $gplButton.attr("style", "display:none");
+
+            // Send the one-time-use code to the server, if the server responds, 
+            // write a 'login successful' message to the web page and then redirect 
+            // back to the main restaurants page
+            $.ajax({
+                type: "POST",
+
+                // gconnect callback is defined in server script
+                // passing the server STATE token protects against
+                // cross-site reference forgery attacks
+                url: "/user/connect_gpl?state={{STATE}}",
+
+                // octet-stream says we are sending an arbitrary binary string of data
+                // and utf-8 says its formatted into unicode
+                contentType: "application/octet-stream; charset=utf-8",
+
+                // Not want jQuery to process results into a string
+                processData: false,
+
+                // Specify data to send to server, the one-time use code
+                data: authResult["code"],
+
+                // If 200, redirect to restaurant page
+                success: function(result) {
+
+                    // Handle to verify the server response if necessary
+                    if (result) {
+                        var name = result.name;
+                        var picture = result.pic_url;
+                        $result.html("<strong>Redirecting...</strong>")
+
+                        window.setTimeout(function() {
+                            window.location.href = result.redirect_url;
+                        }, 4000);
+                    } 
+                    else if (authResult["error"]) {
+                        $result.text("There was an error. Check your browser console.");
+                        console.log("Error: " + authResult["error"]);
+                    } 
+                    else {
+                        $result.html("<strong>Server-side call failed. Please contact server administrator.</strong>");
+                    }
+                },
+                error: function(error) {
+                    $result.html("<strong>There was a sever-side error. Check your browser console.</strong>");
+                    console.log(error.responseText);
+                }
+            });
+        }
+    }
+
+    $gplButton.click(function() {
+        auth2.grantOfflineAccess({"redirect_uri":"postmessage"}).then(gplCallback);
+    });
+</script>
+<!-- END GOOGLE PLUS SIGN IN CODE xxx-->
+
+<!-- FACEBOOK SIGN IN CODE xxx-->
+<script>
+    $result = $("#result")
+
+    window.fbAsyncInit = function() {
+        FB.init({
+            appId      : "{{ FB_ID }}",
+            cookie     : true,  // enable cookies to allow the server to access the session
+            xfbml      : true,  // parse social plugins on this page
+            version    : "v2.9" // use version 2.9
+        });
+    };
+
+    // Load the SDK asynchronously
+    (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, "script", "facebook-jssdk"));
+
+    function sendFbTokenToServer() {
+        var access_token = FB.getAuthResponse()["accessToken"];
+
+        FB.api("/me", function(response) {
+            $.ajax({
+                type: "POST",
+                url: "/user/connect_fb?state={{STATE}}",
+                contentType: 'application/octet-stream; charset=utf-8',
+                processData: false,
+                data: access_token,
+                success: function(result) {
+
+                    if (result) {
+                        var name = result.name;
+                        var picture = result.pic_url;
+                        $result.html("<strong>Redirecting...</strong>")
+
+                        window.setTimeout(function() {
+                            window.location.href = result.redirect_url;
+                        }, 4000);
+                    } 
+                    else if (authResult["error"]) {
+                        $result.html("<strong>There was an error. Check your browser console.</strong>");
+                        console.log("Error: " + authResult["error"]);
+                    } 
+                    else {
+                        $result.html("<strong>Server-side call failed. Please contact server administrator.</strong>");
+                    }
+                },
+                error: function(error) {
+                    $result.text("There was a sever-side error. Check your browser console.");
+                    console.log(error.responseText);
+                }
+            });
+        });
+    }
+</script>
+<!-- END FACEBOOK SIGN IN CODE -->
+
+<!-- TWITTER SIGN IN CODE xxx-->
+<script>
+    $result = $("#result")
+    $twtButton = $("#twt-signin");
+
+    function getTwtToken() {
+        $.ajax({
+            type: "POST",
+            url: "/user/connect_twt?state={{STATE}}",
+            data: "",
+            contentType: "application/octet-stream; charset=utf-8",
+            processData: false,
+            success: function(result) {
+
+                if (result) {
+                    console.log(result)
+                    // var name = result.name;
+                    // var picture = result.pic_url;
+                    // $result.html("<strong>Redirecting...</strong>")
+
+                    window.setTimeout(function() {
+                        window.location.href = result.redirect_url;
+                    }, 4000);
+                } 
+                else {
+                    $result.html("<strong>Server-side call failed. Please contact server administrator.</strong>");
+                }
+            },
+            error: function(error) {
+                $result.html("<strong>An error has occurred. Please check your browser console for details.</strong>");
+                console.log(error.responseText);
+            }
+        })
+    }
+
+    $twtButton.click(getTwtToken);
+</script>
+<!-- END TWITTER SIGN IN CODE -->
+
+<!-- CATALOG SIGN UP -->
+<script>
+    function signUpPage() {
+        $.ajax({
+            type: "POST",
+            url: "/user/signup_redirect?state={{STATE}}",
+            data: "",
+            contentType: "application/octet-stream; charset=utf-8",
+            processData: false,
+            success: function(result) {
+                if (result) {
+                    window.location.href = result.redirect_url;
+                }
+                else {
+                    $result.html("<strong>Server-side call failed. Please contact server administrator.</strong>");
+                }
+            },
+            error: function(error) {
+                console.log(error)
+            }
+        });
+    }
+
+    $("#sign-up").click(signUpPage);
+</script>
+
+{% endblock %}

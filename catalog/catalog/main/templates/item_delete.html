@@ -1,0 +1,20 @@
+{% extends "base/main.html" %}
+{% block content %}
+
+<div class="header">
+    <h2>DELETE ITEM</h2>
+</div>
+<div class="main">
+    <strong> Are you sure you want to delete {{ ITEM_NAME }}? </strong>
+    <form action="{{ url_for('bp_main.delete_item', item_name=ITEM_NAME, user_id=USER_ID) }}" method="POST">
+        <label class="label-inline">Yes
+        <input type="radio" name="fm-yn" value="Y"></label>
+        <label class="label-inline">No
+        <input type="radio" name="fm-yn" value="N" checked></label>
+
+        <input name=csrf-token type=hidden value="{{ STATE }}">
+        <input type="submit" value="Confirm">
+    </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base/login_main.html" %}
+{% block content %}
+
+<div class="header">
+    <h2>CREATE ACCOUNT</h2>
+</div>
+<div class="main">
+    <h3>{{ MSG }}</h3>
+    <div class="msg">
+        <strong>
+            You are about to log in as a new user. Note that changing the email
+            of the service you use to log in will invalidate your user
+            credentials, making your catalog data inaccessable. If you want to change
+            the email, you can do so in the settings screen after logging in. This
+            account cannot be combined with an account created directly through
+        this site.
+        </strong>
+    </div>
+    <form class="fm-16-width" action="{{ url_for('bp_login.register_oauth') }}" method="POST">
+        <div class="yn-box">
+            <label>Make your page public?</label>
+            <label>Yes
+            <input type="radio" name="fm-yn" value="Y" checked></label>
+            <label>No
+            <input type="radio" name="fm-yn" value="N"></label>
+        </div>
+
+        <input type="hidden" name="csrf-token" value="{{ STATE }}">
+        <input type="submit" value="Register">
+    </form>
+</div>
+
+{% endblock %}

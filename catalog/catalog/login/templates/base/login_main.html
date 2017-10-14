@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="shortcut icon" href="{{url_for('static', filename='assets/favicon.ico')}}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/normalize-v7.0.0.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css')}}">
+        
+        <!--LOAD PRE-REQUISITES FOR GOOGLE SIGN IN -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script src="//apis.google.com/js/platform.js?onload=start"></script>
+        <script>
+            gapi.load("auth2", function() {
+                auth2 = gapi.auth2.init({
+                    client_id: "{{ GPL_ID }}",
+                    // Scopes to request in addition to 'profile' and 'email'
+                    //scope: 'additional_scope'
+                });
+            });
+        </script>
+
+    <title>Catalog</title>
+	</head>
+	<body>
+        <nav>
+            <div class="nav-left">
+                <a href="{{url_for('bp_main.welcome') }}"><h1>Catalog</h1></a>
+            </div>
+        </nav>
+		<div class="wrapper">
+			{% block content %}
+			{% endblock %}
+		</div>
+	</body>
+</html>
