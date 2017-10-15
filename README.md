@@ -20,13 +20,6 @@ The focus of this project is to gain better insight into how to set up and confi
 + Setting environment variables for the application
 
 
-Access information
----
-+ URL: <http://ec2-35-163-157-140.us-west-2.compute.amazonaws.com/catalog>
-+ Public IP address: 35.163.157.140
-+ SSH port: 2200
-
-
 I. Set up a new user with `sudo` status
 ---
 1. Create an Ubuntu instance on Lightsail.
